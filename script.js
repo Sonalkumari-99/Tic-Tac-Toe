@@ -1,7 +1,11 @@
 let boxes = document.querySelectorAll(".box");
 let resetbtn = document.getElementById("resetbtn");
-let newbtn = document.getElementById("new-btn");
+ let newbtn = document.getElementById("new-btn");
+ let msgConatainer = document.querySelector(".msg-container");
+ let msg =document.querySelector("#msg");
 let turno = true;
+
+
 
 const winpatterns = [
     [0, 1, 2],
@@ -14,9 +18,14 @@ const winpatterns = [
     [6, 7, 8],
 ];
 
+const resetGame = () =>{
+    turno = true;
+    enableBoxes();
+    msgConatainer.classList.add("hide");
+};
+
 boxes.forEach((box) => {
     box.addEventListener("click", () => {
-        console.log("box was clicked");
         if (turno) {
             box.innerText = "o";
             turno = false;
@@ -28,34 +37,40 @@ boxes.forEach((box) => {
         checkwinner();
     });
 });
+const disableBoxes = () =>{
+    for(let box of boxes){
+        box.disabled =true;
+    }
+};
+const enableBoxes = () =>{
+    for(let box of boxes){
+        box.disabled =false;
+        box.innerText ="";
+    }
+};
+const showWinner = (winner) => {
+    msg.innerText = `congratulations,  winner is ${winner}`;
+    msgConatainer.classList.remove("hide");
+    disableBoxes();
+};
 
 const checkwinner = () => {
-    for (let patter of winpatterns) {
-        let pos1val = boxes[patter[0]].innerText
-        let pos2val = boxes[patter[1]].innerText
-        let pos3val = boxes[patter[2]].innerText
+    for (let pattern of winpatterns) {
+        let pos1val = boxes[pattern[0]].innerText;
+        let pos2val = boxes[pattern[1]].innerText;
+        let pos3val = boxes[pattern[2]].innerText;
 
         if (pos1val != "" && pos2val != "" && pos3val != "") {
             if (pos1val === pos2val && pos2val === pos3val) {
-                console.log("winner ", pos1val);
-                alert("congratulation " + pos1val + " won ");
-                resetbtn.click();
+                showWinner(pos1val);
             }
         }
 
     }
 };
-resetbtn.addEventListener("click", () => {
 
-    boxes.forEach((box) => {
-        box.innerText = "";
-    });
-});
-newbtn.addEventListener("click", () => {
 
-    boxes.forEach((box) => {
-        box.innerText = "";
-    });
-});
+newbtn.addEventListener("click",resetGame);
+resetbtn.addEventListener("click",resetGame); 
 
 
